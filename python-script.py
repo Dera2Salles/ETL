@@ -39,7 +39,7 @@ dataFrameMerged = pd.merge(
     dataFrameMerged, dataFrameBranch, left_on="BranchCode", right_on="CodeBranch", how="left"
 )
 
-dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Actif"]
+dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Active"]
 
 dataFrameMerged["OpeningDate"] = pd.to_datetime(dataFrameMerged["OpeningDate"])
 dataFrameMerged["Report_date_to"] = pd.to_datetime(dataFrameMerged["Report_date_to"])
@@ -68,10 +68,6 @@ topGestionnaires = (
     .nlargest(10)
     .reset_index(name="TotalBalance")
 )
-# TODO : Filtrer uniquement les comptes actifs
-#dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Actif"]
-
-# 3. Formatage des dates, montants, etc.
 
 
 actifAccountNumber = (dataFrameMerged["AccountStatus"] == "Active").sum()
