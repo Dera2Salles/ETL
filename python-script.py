@@ -61,6 +61,9 @@ averageBalanceByProduct = (
     .mean()
     .reset_index(name="AverageAvailableBalance")
 )
+averageAccountByProduct = (
+    dataFrameMerged.groupby("ProductCode").size().reset_index(name="Compte")
+)
 
 topGestionnaires = (
     dataFrameMerged.groupby("gestionnaire de compte")["AvailableBalance"]
