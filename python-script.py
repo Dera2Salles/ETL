@@ -1,5 +1,3 @@
-import sqlite3
-
 import pandas as pd
 
 # Extraction
@@ -32,8 +30,6 @@ dataFrame["BranchCode"] = dataFrame["BranchCode"].astype(str)
 dataFrameProduct["productCode"] = dataFrameProduct["productCode"].astype(str)
 dataFrame["ProductCode"] = dataFrame["ProductCode"].astype(str)
 
-dataFrame["AvailableBalance"] = pd.to_numeric(dataFrame["AvailableBalance"])
-
 
 dataFrameMerged = pd.merge(
     dataFrame, dataFrameProduct, left_on="ProductCode", right_on="productCode", how="left"
@@ -42,6 +38,12 @@ dataFrameMerged = pd.merge(
 dataFrameMerged = pd.merge(
     dataFrameMerged, dataFrameBranch, left_on="BranchCode", right_on="CodeBranch", how="left"
 )
+
+dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Actif"]
+
+dataFrameMerged["OpeningDate"] = pd.to_datetime(dataFrameMerged["OpeningDate"])
+dataFrameMerged["Report_date_to"] = pd.to_datetime(dataFrameMerged["Report_date_to"])
+dataFrameMerged["AvailableBalance"] = pd.to_numeric(dataFrameMerged["AvailableBalance"])
 
 
 # Étape 3 - Agrégation
@@ -66,10 +68,13 @@ topGestionnaires = (
     .nlargest(10)
     .reset_index(name="TotalBalance")
 )
+# TODO : Filtrer uniquement les comptes actifs
+#dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Actif"]
+
+# 3. Formatage des dates, montants, etc.
+
 
 actifAccountNumber = (dataFrameMerged["AccountStatus"] == "Active").sum()
-approvedAccountNumber = (dataFrameMerged["AccountStatus"] == "Approved").sum()
-
 
 
 # # Étape 4 - Chargement dans Data Warehouse (SQLite)
