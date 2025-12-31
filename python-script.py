@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import create_engine
 
 # Extraction
 
@@ -45,6 +46,12 @@ dataFrameMerged["OpeningDate"] = pd.to_datetime(dataFrameMerged["OpeningDate"])
 dataFrameMerged["Report_date_to"] = pd.to_datetime(dataFrameMerged["Report_date_to"])
 dataFrameMerged["AvailableBalance"] = pd.to_numeric(dataFrameMerged["AvailableBalance"])
 
+dataFrameMerged["AccountAgeDays"] = (
+    dataFrameMerged["Report_date_to"] - dataFrameMerged["OpeningDate"]
+).dt.days
+
+dataFrameMerged["AccountAgeYears"] = (dataFrameMerged["AccountAgeDays"] / 365).round(2)
+
 
 # Étape 3 - Agrégation
 
@@ -72,10 +79,46 @@ topGestionnaires = (
     .reset_index(name="TotalBalance")
 )
 
+averageAgeByBranch = (
+    dataFrameMerged.groupby("Branch")["AccountAgeYears"]
+    .mean()
+    .reset_index(name="AverageAccountAgeYears")
+)
+
+averageAgeByBranch = (
+    dataFrameMerged.groupby("Branch")["AccountAgeYears"]
+    .mean()
+    .reset_index(name="AverageAccountAgeYears")
+)
+
+averageAgeByManager = (
+    dataFrameMerged.groupby("gestionnaire de compte")["AccountAgeYears"]
+    .mean()
+    .reset_index(name="AverageAccountAgeYears")
+)
+
 
 actifAccountNumber = (dataFrameMerged["AccountStatus"] == "Active").sum()
 
 
+engine = create_engine("postgresql://asja:asjauniversity@localhost:5432/asjadb")
+
+dataFrameMerged.to_sql("data", engine, if_exists="replace", index=False)
+
+numberAccountsByBranch.to_sql("numberAccountsByBranch", engine, if_exists="replace", index=False)
+totalBalanceByBranch.to_sql("totalBalanceByBranch", engine, if_exists="replace", index=False)
+
+averageBalanceByProduct.to_sql("averageBalanceByProduct", engine, if_exists="replace", index=False)
+averageAccountByProduct.to_sql("averageAccountByProduct", engine, if_exists="replace", index=False)
+
+topGestionnaires.to_sql("topGestionnaires", engine, if_exists="replace", index=False)
+
+
+averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
+
+averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
+
+averageAgeByManager.to_sql("averageAgeByManager", engine, if_exists="replace", index=False)
 # # Étape 4 - Chargement dans Data Warehouse (SQLite)
 # conn = sqlite3.connect("etl_project.db")
 
