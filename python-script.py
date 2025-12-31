@@ -40,6 +40,8 @@ dataFrameMerged = pd.merge(
     dataFrameMerged, dataFrameBranch, left_on="BranchCode", right_on="CodeBranch", how="left"
 )
 
+dataFrameMerged = dataFrameMerged.drop(columns=["productCode"])
+
 dataFrameMerged = dataFrameMerged[dataFrameMerged["AccountStatus"] == "Active"]
 
 dataFrameMerged["OpeningDate"] = pd.to_datetime(dataFrameMerged["OpeningDate"])
@@ -119,55 +121,3 @@ averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", ind
 averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
 
 averageAgeByManager.to_sql("averageAgeByManager", engine, if_exists="replace", index=False)
-# # Étape 4 - Chargement dans Data Warehouse (SQLite)
-# conn = sqlite3.connect("etl_project.db")
-
-# # Création des tables dimensionnelles
-# # Table dimension Produit
-# product_dim = dataFrameProduct.copy()
-# product_dim.columns = ["ProductCode", "ProductName"]
-# product_dim.to_sql("dim_product", conn, if_exists="replace", index=False)
-
-# # Table dimension Agence
-# branch_dim = dataFrameBranch.copy()
-# branch_dim.columns = ["BranchCode", "BranchName"]
-# branch_dim.to_sql("dim_branch", conn, if_exists="replace", index=False)
-
-# # Table dimension Client (simplifiée)
-# client_dim = final_dataset[["ClientCode", "Gestionnaire"]].drop_duplicates()
-# client_dim.to_sql("dim_client", conn, if_exists="replace", index=False)
-
-# # Table des faits (Fact table)
-# fact_accounts = final_dataset[
-#     [
-#         "ClientCode",
-#         "AccountNumber",
-#         "AvailableBalance",
-#         "OpeningDate",
-#         "AccountStatus",
-#         "Report_date_to",
-#         "BankCode",
-#         "BranchCode",
-#         "ProductCode",
-#     ]
-# ]
-# fact_accounts.to_sql("fact_accounts", conn, if_exists="replace", index=False)
-
-# # Table des agrégats pour le dashboard
-# accounts_by_branch.to_sql("agg_accounts_by_branch", conn, if_exists="replace", index=False)
-# total_balance_by_branch.to_sql("agg_balance_by_branch", conn, if_exists="replace", index=False)
-# average_balance_by_product.to_sql(
-#     "agg_avg_balance_by_product", conn, if_exists="replace", index=False
-# )
-# top_gestionnaires.to_sql("agg_top_gestionnaires", conn, if_exists="replace", index=False)
-
-# # Création d'une table pour les KPI globaux
-# kpi_data = pd.DataFrame(
-#     {
-#         "KPI": ["Total comptes actifs", "Solde total", "Clients uniques"],
-#         "Valeur": [total_active_accounts, total_balance_all_accounts, unique_clients],
-#     }
-# )
-# kpi_data.to_sql("kpi_globaux", conn, if_exists="replace", index=False)
-
-# conn.close()
