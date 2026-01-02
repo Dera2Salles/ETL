@@ -121,3 +121,17 @@ averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", ind
 averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
 
 averageAgeByManager.to_sql("averageAgeByManager", engine, if_exists="replace", index=False)
+
+with pd.ExcelWriter("resultats.xlsx", engine="openpyxl") as writer:
+    dataFrameMerged.to_excel(writer, sheet_name="data", index=False)
+
+    numberAccountsByBranch.to_excel(writer, sheet_name="numberAccountsByBranch", index=False)
+    totalBalanceByBranch.to_excel(writer, sheet_name="totalBalanceByBranch", index=False)
+
+    averageBalanceByProduct.to_excel(writer, sheet_name="averageBalanceByProduct", index=False)
+    averageAccountByProduct.to_excel(writer, sheet_name="averageAccountByProduct", index=False)
+
+    topGestionnaires.to_excel(writer, sheet_name="topGestionnaires", index=False)
+
+    averageAgeByBranch.to_excel(writer, sheet_name="averageAgeByBranch", index=False)
+    averageAgeByManager.to_excel(writer, sheet_name="averageAgeByManager", index=False)
