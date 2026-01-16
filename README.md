@@ -17,28 +17,16 @@ This project appears to be focused on data analysis using Python. It utilizes Ju
 
 You will need Python installed, along with several data science libraries. You can likely install them using pip. A `requirements.txt` file is recommended for listing dependencies.
 
-Common libraries for such a project include:
-- `pandas` (for data manipulation and reading Excel files)
-- `numpy` (for numerical operations)
-- `matplotlib` or `seaborn` (for plotting and visualization)
-- `jupyter` (to run the `.ipynb` notebooks)
-- `openpyxl` (for pandas to work with `.xlsx` files)
-
 You can install these with the following command:
+
 ```bash
-pip install pandas numpy matplotlib seaborn jupyter openpyxl
+python3 -m venv your_env
+pip install -r requirements.txt
 ```
 
 ### Usage
 
-1.  **Explore the analysis in the Jupyter Notebook:**
-    - Start the Jupyter server:
-      ```bash
-      jupyter notebook
-      ```
-    - Open `python-DA.ipynb` in your browser to see the step-by-step analysis.
-
-2.  **Run the final script:**
+1.  **Run the final script:**
     - Execute the Python script from your terminal:
       ```bash
       python python-script.py
