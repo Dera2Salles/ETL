@@ -103,20 +103,19 @@ averageAgeByManager = (
 actifAccountNumber = (dataFrameMerged["AccountStatus"] == "Active").sum()
 
 
-engine = create_engine("postgresql://asja:asjauniversity@localhost:5432/asjadb")
+engine = create_engine("sqlite:///etl.sqlite")
 
 dataFrameMerged.to_sql("data", engine, if_exists="replace", index=False)
 
 numberAccountsByBranch.to_sql("numberAccountsByBranch", engine, if_exists="replace", index=False)
+
 totalBalanceByBranch.to_sql("totalBalanceByBranch", engine, if_exists="replace", index=False)
 
 averageBalanceByProduct.to_sql("averageBalanceByProduct", engine, if_exists="replace", index=False)
+
 averageAccountByProduct.to_sql("averageAccountByProduct", engine, if_exists="replace", index=False)
 
 topGestionnaires.to_sql("topGestionnaires", engine, if_exists="replace", index=False)
-
-
-averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
 
 averageAgeByBranch.to_sql("averageAgeByBranch", engine, if_exists="replace", index=False)
 
